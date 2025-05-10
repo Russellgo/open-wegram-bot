@@ -197,19 +197,12 @@ async function addTopicToFromChatOnMetaData(botToken, metaDataMessage, ownerUid,
 }
 
 async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId) {
-  // const oldText = ""
-  // oldText.slice(0, itemStartIndex - 1).concat(oldText.slice(itemEndIndex))
   const oldText = metaDataMessage.text;
   let itemStartIndex = oldText.indexOf(`;${topicId}:`) + 1;
   if (itemStartIndex === 0) return { messageText: oldText };
   let itemEndIndex = oldText.indexOf(';', itemStartIndex);
   let newText = itemEndIndex === -1 ? oldText.substring(0, itemStartIndex - 1)
       : oldText.replace(oldText.substring(itemStartIndex, itemEndIndex + 1), '');
-  // TODO: 2025/5/10 for debugging
-  await postToTelegramApi(botToken, 'sendMessage', {
-    chat_id: ownerUid,
-    text: `topicId: ${topicId} oldText: ${JSON.stringify(oldText)} itemStartIndex: ${itemStartIndex} itemEndIndex: ${itemEndIndex} newText: ${JSON.stringify(newText)}`,
-  });
   await postToTelegramApi(botToken, 'editMessageText', {
     chat_id: ownerUid,
     message_id: metaDataMessage.message_id,
@@ -352,6 +345,11 @@ export async function processPMReceived(botToken, ownerUid, message, superGroupC
 
   if (!isTopicExists) {
     // clean metadata message
+    // TODO: 2025/5/10 for debugging
+    await postToTelegramApi(botToken, 'sendMessage', {
+      chat_id: ownerUid,
+      text: `isTopicExists: metaDataMessage: ${JSON.stringify(metaDataMessage)} topicId: ${topicId}`,
+    });
     await cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId);
     fromChatToTopic.delete(topicId)
     // resend the message
@@ -391,6 +389,11 @@ export async function processPMReceived(botToken, ownerUid, message, superGroupC
     });
   } else if (forwardMessageResp.description.includes('message thread not found')) {
     // clean metadata message
+    // TODO: 2025/5/10 for debugging
+    await postToTelegramApi(botToken, 'sendMessage', {
+      chat_id: ownerUid,
+      text: `isTopicExists: metaDataMessage: ${JSON.stringify(metaDataMessage)} topicId: ${topicId}`,
+    });
     await cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId);
     fromChatToTopic.delete(topicId)
     // resend the message
