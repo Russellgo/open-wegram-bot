@@ -270,6 +270,7 @@ export async function reset(botToken, ownerUid, message, inOwnerChat) {
           text: `Can't reset from group isn't current using!`,
         });
       }
+      return new Response('OK');
     } else {
       await postToTelegramApi(botToken, 'sendMessage', {
         chat_id: ownerUid,
