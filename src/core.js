@@ -97,10 +97,10 @@ export async function handleWebhook(request, ownerUid, botToken, secretToken, ch
 
   const update = await request.json();
   // --- for debugging ---
-  // await postToTelegramApi(botToken, 'sendMessage', {
-  //   chat_id: ownerUid,
-  //   text: `DEBUG MESSAGE! update: ${JSON.stringify(update)}`,
-  // });
+  await postToTelegramApi(botToken, 'sendMessage', {
+    chat_id: ownerUid,
+    text: `DEBUG MESSAGE! update: ${JSON.stringify(update)}`,
+  });
   // --- for debugging ---
 
   if (update.edited_message) {
