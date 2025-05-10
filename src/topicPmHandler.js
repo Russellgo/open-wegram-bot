@@ -207,12 +207,12 @@ async function editMetaDataMessage(botToken, ownerUid, metaDataMessage, newText)
     message_id: metaDataMessage.message_id,
     text: newText,
   })).json();
-  if (!editMessageTextResp.ok) {
+  // if (!editMessageTextResp.ok) {
     await postToTelegramApi(botToken, 'sendMessage', {
       chat_id: ownerUid,
-      text: `cleanItemOnMetaData: editMessageTextResp: ${JSON.stringify(editMessageTextResp)}`,
+      text: `editMetaDataMessage: editMessageTextResp: ${JSON.stringify(editMessageTextResp)}`,
     });
-  }
+  // }
   metaDataMessage.text = editMessageTextResp.result.text;
   return { messageText: editMessageTextResp.result.text };
 }
