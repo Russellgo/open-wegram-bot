@@ -188,12 +188,7 @@ export function parseMetaDataMessage(metaDataMessage) {
 async function addTopicToFromChatOnMetaData(botToken, metaDataMessage, ownerUid, topicId, fromChatId) {
   const newText = `${metaDataMessage.text};${topicId}:${fromChatId}`
   // TODO: 2025/5/10 MAX LENGTH 4096
-  await postToTelegramApi(botToken, 'editMessageText', {
-    chat_id: ownerUid,
-    message_id: metaDataMessage.message_id,
-    text: newText,
-  });
-  return { messageText: newText };
+  return await editMetaDataMessage(botToken, ownerUid, metaDataMessage, newText);
 }
 
 async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId) {
@@ -203,17 +198,23 @@ async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId)
   let itemEndIndex = oldText.indexOf(';', itemStartIndex);
   let newText = itemEndIndex === -1 ? oldText.substring(0, itemStartIndex - 1)
       : oldText.replace(oldText.substring(itemStartIndex, itemEndIndex + 1), '');
+  return await editMetaDataMessage(botToken, ownerUid, metaDataMessage, newText);
+}
+
+async function editMetaDataMessage(botToken, ownerUid, metaDataMessage, newText) {
   const editMessageTextResp = await (await postToTelegramApi(botToken, 'editMessageText', {
     chat_id: ownerUid,
     message_id: metaDataMessage.message_id,
     text: newText,
   })).json();
-  await postToTelegramApi(botToken, 'sendMessage', {
-    chat_id: ownerUid,
-    text: `cleanItemOnMetaData: editMessageTextResp: ${JSON.stringify(editMessageTextResp)}`,
-  });
-  metaDataMessage.text = newText;
-  return { messageText: newText };
+  if (!editMessageTextResp.ok) {
+    await postToTelegramApi(botToken, 'sendMessage', {
+      chat_id: ownerUid,
+      text: `cleanItemOnMetaData: editMessageTextResp: ${JSON.stringify(editMessageTextResp)}`,
+    });
+  }
+  metaDataMessage.text = editMessageTextResp.result.text;
+  return { messageText: editMessageTextResp.result.text };
 }
 
 async function banTopicOnMetaData(botToken, ownerUid, metaDataMessage, topicId) {
