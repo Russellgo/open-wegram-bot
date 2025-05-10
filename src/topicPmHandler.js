@@ -207,7 +207,7 @@ async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId)
   // TODO: 2025/5/10 for debugging
   await postToTelegramApi(botToken, 'sendMessage', {
     chat_id: ownerUid,
-    text: `oldText: ${JSON.stringify(oldText)} itemStartIndex: ${itemStartIndex} itemEndIndex: ${itemEndIndex} newText: ${JSON.stringify(newText)}`,
+    text: `topicId: ${topicId} oldText: ${JSON.stringify(oldText)} itemStartIndex: ${itemStartIndex} itemEndIndex: ${itemEndIndex} newText: ${JSON.stringify(newText)}`,
   });
   await postToTelegramApi(botToken, 'editMessageText', {
     chat_id: ownerUid,
