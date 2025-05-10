@@ -356,7 +356,7 @@ export async function processPMReceived(botToken, ownerUid, message, superGroupC
       text: `isTopicExists: metaDataMessage: ${JSON.stringify(metaDataMessage)} topicId: ${topicId}`,
     });
     await cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId);
-    fromChatToTopic.delete(topicId)
+    fromChatToTopic.delete(fromChatId)
     // resend the message
     await processPMReceived(botToken, ownerUid, message, superGroupChatId, fromChatToTopic, bannedTopics, metaDataMessage)
     return
@@ -400,7 +400,7 @@ export async function processPMReceived(botToken, ownerUid, message, superGroupC
       text: `isTopicExists: metaDataMessage: ${JSON.stringify(metaDataMessage)} topicId: ${topicId}`,
     });
     await cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId);
-    fromChatToTopic.delete(topicId)
+    fromChatToTopic.delete(fromChatId)
     // resend the message
     await processPMReceived(botToken, ownerUid, message, superGroupChatId, fromChatToTopic, bannedTopics, metaDataMessage)
   }
