@@ -203,11 +203,15 @@ async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId)
   let itemEndIndex = oldText.indexOf(';', itemStartIndex);
   let newText = itemEndIndex === -1 ? oldText.substring(0, itemStartIndex - 1)
       : oldText.replace(oldText.substring(itemStartIndex, itemEndIndex + 1), '');
-  await (await postToTelegramApi(botToken, 'editMessageText', {
+  const editMessageTextResp = await (await postToTelegramApi(botToken, 'editMessageText', {
     chat_id: ownerUid,
     message_id: metaDataMessage.message_id,
     text: newText,
-  })).text();
+  })).json();
+  await postToTelegramApi(botToken, 'sendMessage', {
+    chat_id: ownerUid,
+    text: `cleanItemOnMetaData: editMessageTextResp: ${JSON.stringify(editMessageTextResp)}`,
+  });
   metaDataMessage.text = newText;
   return { messageText: newText };
 }
