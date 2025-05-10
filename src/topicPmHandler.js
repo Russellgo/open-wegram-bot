@@ -201,7 +201,7 @@ async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId)
   // oldText.slice(0, itemStartIndex - 1).concat(oldText.slice(itemEndIndex))
   const oldText = metaDataMessage.text;
   let itemStartIndex = oldText.indexOf(`;${topicId}:`) + 1;
-  if (itemStartIndex === -1) return { messageText: oldText };
+  if (itemStartIndex === 0) return { messageText: oldText };
   let itemEndIndex = oldText.indexOf(';', itemStartIndex);
   let newText = itemEndIndex === -1 ? oldText.substring(0, itemStartIndex - 1)
       : oldText.replace(oldText.substring(itemStartIndex, itemEndIndex + 1), '');
