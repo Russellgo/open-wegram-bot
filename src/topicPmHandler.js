@@ -320,7 +320,7 @@ export async function processPMReceived(botToken, ownerUid, message, superGroupC
     if (!createTopicResp.ok || !topicId) {
       await postToTelegramApi(botToken, 'sendMessage', {
         chat_id: ownerUid,
-        text: `DEBUG MESSAGE! topicName: ${topicName} createTopicResp: ${JSON.stringify(createTopicResp)}`,
+        text: `DEBUG MESSAGE! chatId: ${superGroupChatId} topicName: ${topicName} createTopicResp: ${JSON.stringify(createTopicResp)}`,
       });
       return;
     }
