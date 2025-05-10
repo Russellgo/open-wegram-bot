@@ -170,6 +170,7 @@ export function parseMetaDataMessage(metaDataMessage) {
     for (let i = 1; i < metaDataSplit.length; i++) {
       const topicToFromChatSplit = metaDataSplit[i].split(":");
       const topic = parseInt(topicToFromChatSplit[0]);
+      if (!topic) continue
       let fromChat;
       if (topicToFromChatSplit[1].startsWith('b')) {
         bannedTopics.push(topic);
@@ -186,6 +187,7 @@ export function parseMetaDataMessage(metaDataMessage) {
 
 async function addTopicToFromChatOnMetaData(botToken, metaDataMessage, ownerUid, topicId, fromChatId) {
   const newText = `${metaDataMessage.text};${topicId}:${fromChatId}`
+  // TODO: 2025/5/10 MAX LENGTH 4096
   await postToTelegramApi(botToken, 'editMessageText', {
     chat_id: ownerUid,
     message_id: metaDataMessage.message_id,
@@ -315,6 +317,13 @@ export async function processPMReceived(botToken, ownerUid, message, superGroupC
       name: topicName,
     })).json();
     topicId = createTopicResp.result?.message_thread_id
+    if (!createTopicResp.ok || !topicId) {
+      await postToTelegramApi(botToken, 'sendMessage', {
+        chat_id: ownerUid,
+        text: `DEBUG MESSAGE! topicName: ${topicName} createTopicResp: ${JSON.stringify(createTopicResp)}`,
+      });
+      return;
+    }
     await addTopicToFromChatOnMetaData(botToken, metaDataMessage, ownerUid, topicId, fromChatId);
     isNewTopic = true;
   }
