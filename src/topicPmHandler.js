@@ -197,11 +197,18 @@ async function addTopicToFromChatOnMetaData(botToken, metaDataMessage, ownerUid,
 }
 
 async function cleanItemOnMetaData(botToken, metaDataMessage, ownerUid, topicId) {
+  // const oldText = ""
+  // oldText.slice(0, itemStartIndex - 1).concat(oldText.slice(itemEndIndex))
   const oldText = metaDataMessage.text;
   let itemStartIndex = oldText.indexOf(`;${topicId}:`) + 1;
   let itemEndIndex = oldText.indexOf(';', itemStartIndex);
   let newText = itemEndIndex === -1 ? oldText.substring(0, itemStartIndex - 1)
       : oldText.replace(oldText.substring(itemStartIndex, itemEndIndex + 1), '');
+  // TODO: 2025/5/10 for debugging
+  await postToTelegramApi(botToken, 'sendMessage', {
+    chat_id: ownerUid,
+    text: `oldText: ${oldText} itemStartIndex: ${itemStartIndex} itemEndIndex: ${itemEndIndex} newText: ${newText}`,
+  });
   await postToTelegramApi(botToken, 'editMessageText', {
     chat_id: ownerUid,
     message_id: metaDataMessage.message_id,
